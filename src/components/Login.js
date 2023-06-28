@@ -24,7 +24,6 @@ const Login = () => {
         localStorage.setItem("token", res.data.token);
         push("/friends");
       })
-
       .catch((err) => {
         console.log(err);
       });
