@@ -1,35 +1,56 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
-const LoginForm = () => {
-  const initialState = {
+const Login = () => {
+  const push = useNavigate();
+  const [cred, setCred] = useState({
     username: "",
     password: "",
-  };
-
-  const [values, setValues] = useState(initialState);
+  });
 
   const handleChange = (e) => {
-    e.preventDefault();
-    setValues({ ...values, [e.target.name]: [e.target.value] });
+    setCred({
+      ...cred,
+      [e.target.name]: e.target.value,
+    });
   };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    axios
+      .post("http://localhost:9000/api/login", cred)
+      .then((res) => {
+        localStorage.setItem("token", res.data.token);
+        push("/friends");
+      })
+
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   return (
-    <form className="login">
-      <input
-        type="text"
-        placeholder="username"
-        value={values.username}
-        name="username"
-        onChange={handleChange}
-      />
-      <input
-        type="text"
-        placeholder="password"
-        value={values.password}
-        name="password"
-        onChange={handleChange}
-      />
-    </form>
+    <div>
+      <h1>Login</h1>
+      <form onSubmit={handleSubmit}>
+        <div>
+          <label htmlFor="username">Username</label>
+          <input onChange={handleChange} name="username" id="username" />
+        </div>
+        <div>
+          <label htmlFor="password">Password:</label>
+          <input
+            onChange={handleChange}
+            name="password"
+            type="password"
+            id="password"
+          />
+        </div>
+        <button>Submit</button>
+      </form>
+    </div>
   );
 };
 
-export default LoginForm;
+export default Login;

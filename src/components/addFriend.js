@@ -1,37 +1,47 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const AddFriend = () => {
-  const initialState = {
-    fullName: "",
-    email: "",
-  };
-
-  const [values, setValues] = useState(initialState);
+  const push = useNavigate();
+  const [form, setForm] = useState({ name: "", email: "", age: "" });
 
   const handleChange = (e) => {
     e.preventDefault();
-    setValues({ ...values, [e.target.name]: [e.target.value] });
+    setForm({ ...form, [e.target.name]: [e.target.value] });
   };
 
   const handleSubmit = (e) => {
+    const token = localStorage.getItem("token");
     e.preventDefault();
+    axios
+      .post("http://localhost:9000/api/friends", form, {
+        headers: {
+          authorization: token,
+        },
+      })
+      .then((res) => push("/friends"))
+      .catch((err) => console.log(err));
   };
   return (
-    <form>
+    <form onSubmit={handleSubmit}>
+      <label htmlFor="name">Name:</label>
       <input
         type="text"
         placeholder="name"
-        name="fullName"
-        value={values.fullName}
+        name="name"
         onChange={handleChange}
       />
+      <label htmlFor="email">Email:</label>
       <input
         type="email"
         placeholder="email"
         name="email"
-        value={values.email}
         onChange={handleChange}
       />
+      <label htmlFor="age">Age:</label>
+      <input type="text" placeholder="age" name="age" onChange={handleChange} />
+      <button>Add Friend</button>
     </form>
   );
 };

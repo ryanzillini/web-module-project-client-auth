@@ -37,20 +37,6 @@
   }
 }
 
-.header {
-  display: flex;
-  justify-content: space-between;
-  margin: 20px;
-}
-
-ul {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-evenly;
-  margin-top: 25px;
-  list-style: none;
-}
-
-li {
-  margin: 5px;
+.link {
+  padding: 1em;
 }

@@ -1,13 +1,40 @@
-// FriendsList.js
-import React from "react";
-import ListItem from "./ListItem";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 
-const FriendsList = ({ friends }) => {
+const FriendsList = () => {
+  const [friends, setFriends] = useState([]);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    console.log(token);
+
+    axios
+      .get("http://localhost:9000/api/friends", {
+        headers: {
+          authorization: token,
+        },
+      })
+      .then((resp) => {
+        setFriends(resp.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
+
   return (
-    <div className="Friends-List">
-      {friends.map((friend, id) => (
-        <ListItem key={id} friend={friend} />
-      ))}
+    <div>
+      <h2>Friends List</h2>
+      <ul>
+        {friends.map((friend) => {
+          return (
+            <li key={friend.name}>
+              {" "}
+              {friend.name} - {friend.age} - {friend.email}
+            </li>
+          );
+        })}
+      </ul>
     </div>
   );
 };
